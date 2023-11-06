@@ -29,8 +29,13 @@ afterEvaluate {
                     name = PUBLISH_ARTIFACT_ID
                     description = 'Demo Android SDK'
                     url = 'https://github.com/BinduMCX/mavenDemo'
-                    licenses {
-                    }
+                        licenses {
+                            license {
+                                name = 'Demo License'
+                                url = 'https://github.com/BinduMCX/mavenDemo/blob/main/LICENSE'
+                            }
+                        }
+
                     developers {
                         developer {
                             id = 'Bindu'
