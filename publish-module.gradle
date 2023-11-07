@@ -22,14 +22,16 @@ version = PUBLISH_VERSION
 afterEvaluate {
     publishing {
         publications {
-            release(MavenPublication) {
-                tasks.named("generateMetadataFileForReleasePublication").configure { dependsOn("androidSourcesJar") }
+            aar(MavenPublication) {
+                //tasks.named("generateMetadataFileForReleasePublication").configure { dependsOn("androidSourcesJar") }
                 groupId PUBLISH_GROUP_ID
                 artifactId PUBLISH_ARTIFACT_ID
                 version PUBLISH_VERSION
-                from components.findByName('release')
+                // from components.findByName('release')
+             //   artifact bundleReleaseAar
+                //artifact androidJavadocsJar
                 artifact androidSourcesJar
-
+                artifact("$buildDir/outputs/aar/maven_central_demo.aar")
                 pom {
                     name = PUBLISH_ARTIFACT_ID
                     description = 'Demo Android SDK'
@@ -68,6 +70,11 @@ afterEvaluate {
 //    sign publishing.publications
 //   // sign configurations.archives
 //}
+//signing {
+//    sign configurations.archives
+//}
 signing {
-    sign configurations.archives
+    publishing.publications.all { publication ->
+        sign publication
+    }
 }
