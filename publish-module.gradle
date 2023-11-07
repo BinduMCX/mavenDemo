@@ -1,13 +1,25 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-
-task androidSourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from android.sourceSets.main.java.srcDirs
-    from android.sourceSets.main.kotlin.srcDirs
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+        }
+    }
 }
-tasks.register('javadocJar', Jar) {
+
+tasks.register('androidSourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+    }
+}
+
+
+task javadocJar(type: Jar) {
     archiveClassifier.set('javadoc')
 }
 
@@ -22,16 +34,18 @@ version = PUBLISH_VERSION
 afterEvaluate {
     publishing {
         publications {
-            aar(MavenPublication) {
-                //tasks.named("generateMetadataFileForReleasePublication").configure { dependsOn("androidSourcesJar") }
+            release(MavenPublication) {
+                tasks.named("generateMetadataFileForReleasePublication").configure { dependsOn("androidSourcesJar") }
+                from components.findByName('release')
                 groupId PUBLISH_GROUP_ID
                 artifactId PUBLISH_ARTIFACT_ID
                 version PUBLISH_VERSION
-                // from components.findByName('release')
-             //   artifact bundleReleaseAar
-                //artifact androidJavadocsJar
+               // if (project.plugins.findPlugin("com.android.library")) {
+                //} else {
+                  //  from components.java
+                //}
                 artifact androidSourcesJar
-                artifact("$buildDir/outputs/aar/maven_central_demo.aar")
+                artifact javadocJar
                 pom {
                     name = PUBLISH_ARTIFACT_ID
                     description = 'Demo Android SDK'
