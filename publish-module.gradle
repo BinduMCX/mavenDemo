@@ -9,7 +9,7 @@ sourceSets {
     }
 }
 
-task androidSourcesJar(type: Jar) {
+tasks.register('androidSourcesJar', Jar) {
     archiveClassifier.set('sources')
     if (project.plugins.findPlugin("com.android.library")) {
         from android.sourceSets.main.java.srcDirs
@@ -19,7 +19,7 @@ task androidSourcesJar(type: Jar) {
 }
 
 
-task javadocJar(type: Jar) {
+tasks.register('javadocJar', Jar) {
     archiveClassifier.set('javadoc')
 }
 
@@ -38,17 +38,17 @@ afterEvaluate {
                 groupId PUBLISH_GROUP_ID
                 artifactId PUBLISH_ARTIFACT_ID
                 version PUBLISH_VERSION
-                if (project.plugins.findPlugin("com.android.library")) {
-                    from components.release
-                } else {
-                    artifact("$buildDir/libs/${project.getName()}-${version}.jar")
-                }
+               // if (project.plugins.findPlugin("com.android.library")) {
+                   // from components.java
+               // } else {
+                 //   artifact("$buildDir/libs/${project.getName()}-${version}.jar")
+                //}
 
-                artifact androidSourcesJar
                 artifact androidSourcesJar
                 artifact javadocJar
                 pom {
                     name = PUBLISH_ARTIFACT_ID
+                    packaging 'jar'
                     description = 'Demo Android SDK'
                     url = 'https://github.com/BinduMCX/mavenDemo'
                         licenses {
