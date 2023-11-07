@@ -11,7 +11,6 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.maven_central_demo"
         minSdk 21
         targetSdk 31
         versionCode 103
